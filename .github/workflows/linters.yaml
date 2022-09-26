@@ -1,0 +1,36 @@
+name: "Linters"
+
+on:
+  pull_request:
+
+jobs:
+  commits_checks:
+    name: "Commits checks"
+    runs-on: "self-hosted"
+    steps:
+      - name: "Check out code"
+        uses: "actions/checkout@v2"
+        with:
+          fetch-depth: 0
+      - name: "Check commit messages"
+        id: "messages_check"
+        uses: "docker://aevea/commitsar"
+      - name: "Add comment with check result"
+        if: "failure()"
+        uses: "actions/github-script@v4"
+        with:
+          script: |
+            let body = '**Commit messages check**' +
+                       '\n\nResult: ${{ steps.messages_check.outcome }}'
+
+            if ('${{ steps.messages_check.outcome }}' !== 'success') {
+              /* TODO: add the step output once it is available */
+              body += '\n\nSee https://www.conventionalcommits.org/'
+            }
+
+            github.issues.createComment({
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              body: body
+            })

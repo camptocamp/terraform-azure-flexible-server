@@ -1,0 +1,147 @@
+name: "Terraform"
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  terraform:
+    name: "Terraform"
+    runs-on: "self-hosted"
+    env:
+      TF_PLUGINS_DIR: "/opt/github/.terraform.d/plugins"
+      TF_PLUGIN_CACHE_DIR: "/opt/github/.terraform.d/plugin-cache"
+      ARM_USE_MSI: "true"
+      ARM_TENANT_ID: "${{ secrets.ARM_TENANT_ID }}"
+      ARM_SUBSCRIPTION_ID: "${{ secrets.ARM_SUBSCRIPTION_ID }}"
+    steps:
+      - name: "Check out code"
+        uses: "actions/checkout@v2"
+        with:
+          submodules: "recursive"
+      - name: "Setup Terraform"
+        uses: "hashicorp/setup-terraform@v1"
+        with:
+          terraform_version: "~1.0.0"
+      - name: "Setup Terraform plugin cache"
+        run: |
+          mkdir -p "${TF_PLUGINS_DIR}" || exit 1
+          mkdir -p "${TF_PLUGIN_CACHE_DIR}" || exit 1
+      - name: "Install Terraform Ansible provisioner"
+        run: |
+          provisioner_version='2.5.0'
+          provisioner_checksum='3f99da9a45171ff0afd2022e6c28ae0db979193378a83f7d33abb2a84b237848'
+
+          provisioner_url="https://github.com/radekg/terraform-provisioner-ansible/releases/download/v${provisioner_version}/terraform-provisioner-ansible-linux-amd64_v${provisioner_version}"
+          provisioner_filename="terraform-provisioner-ansible_v${provisioner_version}"
+          provisioner_directory="${TF_PLUGINS_DIR}/linux_amd64"
+
+          [ -x "${provisioner_directory}/${provisioner_filename}" ] && { printf '\nPlugin already installed\n'; exit 0; }
+
+          mkdir -p "${provisioner_directory}" || { printf '\nFailed to create provisioner directory\n'; exit 1; }
+
+          cd "$(mktemp -d)" || { printf '\nFailed to create temporary directory\n'; exit 1; }
+
+          if wget "${provisioner_url}" -O "${provisioner_filename}"
+          then
+            checksum="$(sha256sum "${provisioner_filename}" | cut -d ' ' -f 1)"
+
+            if [ "${checksum}" = "${provisioner_checksum}" ]
+            then
+              if ! install "${provisioner_filename}" "${provisioner_directory}"
+              then
+                printf "\nFailed to move ${provisioner_filename} to ${provisioner_directory}\n"
+              fi
+            else
+              printf "\nFailed to verify checksum: expected '${provisioner_checksum}', got '${checksum}'\n"
+            fi
+          else
+            printf '\nFailed to download provisioner at ${provisioner_url}\n'
+          fi
+
+          rm -r "$(realpath .)"
+      - name: "Check configuration format"
+        id: "format_check"
+        if: "github.event_name == 'pull_request'"
+        run: "terraform fmt -check -recursive -diff -no-color"
+      - name: "Initialize workspace"
+        id: "init"
+        run: "terraform init -no-color"
+      - name: "Validate configuration"
+        id: "validate"
+        if: "github.event_name == 'pull_request'"
+        run: "terraform validate -no-color"
+      - name: "Plan changes"
+        id: "plan"
+        if: "github.event_name == 'pull_request'"
+        run: "terraform plan -no-color"
+        env:
+          GITHUB_TOKEN: "${{ secrets.ORGANIZATION_GITHUB_TOKEN }}"
+      - name: "Add comment with results"
+        if: "github.event_name == 'pull_request' && always() && steps.format_check.outcome != 'skipped'"
+        uses: "actions/github-script@v4"
+        with:
+          script: |
+            let body = '**Terraform configuration format check**' +
+                       '\n\nResult: ${{ steps.format_check.outcome }}'
+
+            if ('${{ steps.format_check.outcome }}' !== 'success') {
+              body += '\n\n<details>' +
+                      '\n<summary>Details</summary>' +
+                      '\n\n```\n' +
+                      (${{ toJSON(steps.format_check.outputs.stdout) }}.trim() + '\n\n' +
+                       ${{ toJSON(steps.format_check.outputs.stderr) }}.trim()).trim() +
+                      '\n```' +
+                      '\n\n</details>'
+            } else {
+              body += '\n\n**Terraform workspace initialization**' +
+                      '\n\nResult: ${{ steps.init.outcome }}'
+
+              if ('${{ steps.init.outcome }}' !== 'success') {
+                body += '\n\n<details>' +
+                        '\n<summary>Details</summary>' +
+                        '\n\n```\n' +
+                        (${{ toJSON(steps.init.outputs.stdout) }}.trim() + '\n\n' +
+                         ${{ toJSON(steps.init.outputs.stderr) }}.trim()).trim() +
+                        '\n```' +
+                        '\n\n</details>'
+              } else {
+                body += '\n\n**Terraform configuration validation**' +
+                        '\n\nResult: ${{ steps.validate.outcome }}'
+
+                if ('${{ steps.validate.outcome }}' !== 'success') {
+                  body += '\n\n<details>' +
+                          '\n<summary>Details</summary>' +
+                          '\n\n```\n' +
+                          (${{ toJSON(steps.validate.outputs.stdout) }}.trim() + '\n\n' +
+                           ${{ toJSON(steps.validate.outputs.stderr) }}.trim()).trim() +
+                          '\n```' +
+                          '\n\n</details>'
+                } else {
+                  body += '\n\n**Terraform changes planning**' +
+                          '\n\nResult: ${{ steps.plan.outcome }}' +
+                          '\n\n<details>' +
+                          '\n<summary>Details</summary>' +
+                          '\n\n```\n' +
+                          (${{ toJSON(steps.plan.outputs.stdout) }}.trim() + '\n\n' +
+                           ${{ toJSON(steps.plan.outputs.stderr) }}.trim()).trim() +
+                          '\n```' +
+                          '\n\n</details>'
+                }
+              }
+            }
+
+            github.issues.createComment({
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              body: body
+            })
+      - name: "Apply changes"
+        id: "apply"
+        if: "github.event_name == 'push' && github.ref == 'refs/heads/main'"
+        run: "terraform apply -auto-approve -no-color"
+        env:
+          GITHUB_TOKEN: "${{ secrets.ORGANIZATION_GITHUB_TOKEN }}"
