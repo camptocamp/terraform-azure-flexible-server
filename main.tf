@@ -60,6 +60,8 @@ resource "azurerm_postgresql_flexible_server" "this" {
     start_hour   = var.maintenance_window.start_hour
     start_minute = var.maintenance_window.start_minute
   }
+
+  depends_on = [azurerm_private_dns_zone_virtual_network_link.dns_net, azurerm_private_dns_zone_virtual_network_link.dns_pipe_net]
 }
 
 resource "azurerm_postgresql_flexible_server_configuration" "this" {
@@ -70,7 +72,46 @@ resource "azurerm_postgresql_flexible_server_configuration" "this" {
   value     = each.value
 }
 
+
+resource "kubernetes_secret" "operator" {
+
+  metadata {
+    labels    = { "odoo-operator.camptocamp.com/secret-type" = "postgresql-cluster" }
+    name      = azurerm_postgresql_flexible_server.this.name
+    namespace = "odoo-operator"
+  }
+
+  data = {
+    host     = "${azurerm_postgresql_flexible_server.this.name}.postgres.database.azure.com"
+    name     = azurerm_postgresql_flexible_server.this.name
+    username = azurerm_postgresql_flexible_server.this.administrator_login
+    password = azurerm_postgresql_flexible_server.this.administrator_password
+  }
+}
+
+resource "kubernetes_secret" "console" {
+
+  metadata {
+    name      = azurerm_postgresql_flexible_server.this.name
+    namespace = "global-console"
+  }
+
+  data = {
+    host     = "${azurerm_postgresql_flexible_server.this.name}.postgres.database.azure.com"
+    name     = azurerm_postgresql_flexible_server.this.name
+    username = azurerm_postgresql_flexible_server.this.administrator_login
+    password = azurerm_postgresql_flexible_server.this.administrator_password
+  }
+}
+
+resource "azurerm_role_assignment" "operator_indentity" {
+  principal_id         = var.principal_id
+  role_definition_name = "Contributor"
+  scope                = azurerm_postgresql_flexible_server.this.id
+}
+
 resource "azurerm_management_lock" "this" {
+  count      = var.instance_lock ? 1 : 0
   name       = format("%s-lock", azurerm_postgresql_flexible_server.this.name)
   scope      = azurerm_postgresql_flexible_server.this.id
   lock_level = "CanNotDelete"

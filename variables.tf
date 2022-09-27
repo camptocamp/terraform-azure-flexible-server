@@ -3,6 +3,11 @@ variable "location" {
   type        = string
 }
 
+variable "principal_id" {
+  description = "Service principal"
+  type        = string
+}
+
 variable "pg_version" {
   description = "Postgresql engine version"
   type        = string
@@ -71,7 +76,7 @@ variable "subnet_address_prefixes" {
 variable "backup_retention_days" {
   description = "Backup retention days for the PostgreSQL Flexible Server."
   type        = number
-  default     = 7
+  default     = 35
 }
 
 variable "maintenance_window" {
@@ -96,22 +101,28 @@ variable "private_dns_zone_name" {
 variable "postgresql_config" {
   type = map(string)
   default = {
-    max_connections                  = "1600"
-    shared_buffers                   = "1048576" # 8KB => 8GB
-    effective_cache_size             = "3145728" # 8KB => 24GB
-    maintenance_work_mem             = "2097151" # KB => 2GB
-    checkpoint_completion_target     = "0.9"
-    wal_buffers                      = "2048" # 8KB => 16MB
-    default_statistics_target        = "100"
-    random_page_cost                 = "1.1"
-    effective_io_concurrency         = "200"
-    work_mem                         = "59392" # KB => 58MB
-    min_wal_size                     = "1024"  # MB => 1GB
-    max_wal_size                     = "4096"  # MB => 4GB
-    max_worker_processes             = "4"
-    max_parallel_workers_per_gather  = "2"
-    max_parallel_workers             = "4"
-    max_parallel_maintenance_workers = "2"
-    "azure.extensions"               = "DBLINK,PG_STAT_STATEMENTS,UNACCENT,POSTGIS,PG_TRGM"
+    max_connections                  = ""
+    shared_buffers                   = ""
+    effective_cache_size             = ""
+    maintenance_work_mem             = ""
+    checkpoint_completion_target     = ""
+    wal_buffers                      = ""
+    default_statistics_target        = ""
+    random_page_cost                 = ""
+    effective_io_concurrency         = ""
+    work_mem                         = ""
+    min_wal_size                     = ""
+    max_wal_size                     = ""
+    max_worker_processes             = ""
+    max_parallel_workers_per_gather  = ""
+    max_parallel_workers             = ""
+    max_parallel_maintenance_workers = ""
+    "azure.extensions"               = ""
   }
+}
+
+variable "instance_lock" {
+  description = "If true, it’s not possible to remove the flexible-server"
+  type        = bool
+  default     = true
 }
