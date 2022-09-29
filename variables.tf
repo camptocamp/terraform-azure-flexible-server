@@ -3,9 +3,22 @@ variable "location" {
   type        = string
 }
 
-variable "principal_id" {
-  description = "Service principal"
-  type        = string
+variable "contributors" {
+  description = "List of service principal ID to have Contributor role for the PostgreSQL Flexible Server."
+  type = list(string)
+  default = []
+}
+
+variable "users_on_keyvault" {
+  description = "List of object ID (user, service principal or security group in the AD tenant) to have predifined user-like required access to kv."
+  type = list(string)
+  default = []
+}
+
+variable "terraformers_on_keyvault" {
+  description = "List of object ID (user, service principal or security group in the AD tenant) to have predifined terraform-like required access to kv."
+  type = list(string)
+  default = []
 }
 
 variable "pg_version" {

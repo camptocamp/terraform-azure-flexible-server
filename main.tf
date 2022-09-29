@@ -1,7 +1,48 @@
-resource "random_password" "this" {
-  length  = 12
-  special = false
+
+###########
+### Core
+
+resource "azurerm_management_lock" "this" {
+  count      = var.instance_lock ? 1 : 0
+  name       = format("%s-lock", azurerm_postgresql_flexible_server.this.name)
+  scope      = azurerm_postgresql_flexible_server.this.id
+  lock_level = "CanNotDelete"
+  notes      = "This is a security mechanism to prevent accidental deletion. Deleting a postgresql cluster drops all databases and also PITR backups."
 }
+
+resource "azurerm_postgresql_flexible_server" "this" {
+  name                   = var.name
+  resource_group_name    = var.resource_group_name
+  location               = var.location
+  version                = var.pg_version
+  delegated_subnet_id    = azurerm_subnet.this.id
+  private_dns_zone_id    = azurerm_private_dns_zone.this.id
+  administrator_login    = var.administrator_login
+  administrator_password = random_password.this.result
+
+  sku_name   = var.sku_name
+  storage_mb = var.storage_mb
+
+  backup_retention_days = var.backup_retention_days
+  maintenance_window {
+    day_of_week  = var.maintenance_window.day_of_week
+    start_hour   = var.maintenance_window.start_hour
+    start_minute = var.maintenance_window.start_minute
+  }
+
+  depends_on = [azurerm_private_dns_zone_virtual_network_link.dns_net, azurerm_private_dns_zone_virtual_network_link.dns_pipe_net]
+}
+
+resource "azurerm_postgresql_flexible_server_configuration" "this" {
+  for_each = var.postgresql_config
+
+  server_id = azurerm_postgresql_flexible_server.this.id
+  name      = each.key
+  value     = each.value
+}
+
+###########
+### Network
 
 resource "azurerm_subnet" "this" {
   name                 = var.subnet_name
@@ -41,79 +82,101 @@ resource "azurerm_private_dns_zone_virtual_network_link" "dns_pipe_net" {
 }
 
 
-resource "azurerm_postgresql_flexible_server" "this" {
-  name                   = var.name
-  resource_group_name    = var.resource_group_name
-  location               = var.location
-  version                = var.pg_version
-  delegated_subnet_id    = azurerm_subnet.this.id
-  private_dns_zone_id    = azurerm_private_dns_zone.this.id
-  administrator_login    = var.administrator_login
-  administrator_password = random_password.this.result
+###########
+### Secrets
 
-  sku_name   = var.sku_name
-  storage_mb = var.storage_mb
-
-  backup_retention_days = var.backup_retention_days
-  maintenance_window {
-    day_of_week  = var.maintenance_window.day_of_week
-    start_hour   = var.maintenance_window.start_hour
-    start_minute = var.maintenance_window.start_minute
-  }
-
-  depends_on = [azurerm_private_dns_zone_virtual_network_link.dns_net, azurerm_private_dns_zone_virtual_network_link.dns_pipe_net]
+resource "random_password" "this" {
+  length  = 12
+  special = false
 }
 
-resource "azurerm_postgresql_flexible_server_configuration" "this" {
-  for_each = var.postgresql_config
+resource "azurerm_role_assignment" "contributors" {
+  for_each = toset(var.contributors)
 
-  server_id = azurerm_postgresql_flexible_server.this.id
-  name      = each.key
-  value     = each.value
-}
-
-
-resource "kubernetes_secret" "operator" {
-
-  metadata {
-    labels    = { "odoo-operator.camptocamp.com/secret-type" = "postgresql-cluster" }
-    name      = azurerm_postgresql_flexible_server.this.name
-    namespace = "odoo-operator"
-  }
-
-  data = {
-    host     = "${azurerm_postgresql_flexible_server.this.name}.postgres.database.azure.com"
-    name     = azurerm_postgresql_flexible_server.this.name
-    username = azurerm_postgresql_flexible_server.this.administrator_login
-    password = azurerm_postgresql_flexible_server.this.administrator_password
-  }
-}
-
-resource "kubernetes_secret" "console" {
-
-  metadata {
-    name      = azurerm_postgresql_flexible_server.this.name
-    namespace = "global-console"
-  }
-
-  data = {
-    host     = "${azurerm_postgresql_flexible_server.this.name}.postgres.database.azure.com"
-    name     = azurerm_postgresql_flexible_server.this.name
-    username = azurerm_postgresql_flexible_server.this.administrator_login
-    password = azurerm_postgresql_flexible_server.this.administrator_password
-  }
-}
-
-resource "azurerm_role_assignment" "operator_indentity" {
-  principal_id         = var.principal_id
+  principal_id         = each.key
   role_definition_name = "Contributor"
   scope                = azurerm_postgresql_flexible_server.this.id
 }
 
-resource "azurerm_management_lock" "this" {
-  count      = var.instance_lock ? 1 : 0
-  name       = format("%s-lock", azurerm_postgresql_flexible_server.this.name)
-  scope      = azurerm_postgresql_flexible_server.this.id
-  lock_level = "CanNotDelete"
-  notes      = "This is a security mechanism to prevent accidental deletion. Deleting a postgresql cluster drops all databases and also PITR backups."
+
+resource "azurerm_key_vault_access_policy" "terraform_on_kv" {
+
+  for_each = toset(var.terraformers_on_keyvault)
+
+  key_vault_id = azurerm_key_vault.this.id
+  tenant_id = var.tenant_id
+  object_id = each.key
+
+  key_permissions = [
+    "get",
+    "create",
+  ]
+
+  secret_permissions = [
+    "delete",
+    "get",
+    "purge",
+    "recover",
+    "set",
+  ]
+}
+
+resource "azurerm_key_vault_access_policy" "user_on_kv" {
+  
+  for_each = toset(var.users_on_keyvault)
+
+  key_vault_id = azurerm_key_vault.this.id
+  tenant_id = var.tenant_id
+  object_id = each.key
+
+  secret_permissions = [
+    "backup",
+    "delete",
+    "get",
+    "list",
+    "purge",
+    "recover",
+    "restore",
+    "set",
+  ]
+}
+
+resource "azurerm_key_vault_secret" "cortexia_database_pghost" {
+  name         = "PGHOST"
+  value        = azurerm_postgresql_flexible_server.this.fqdn
+  key_vault_id = azurerm_key_vault.this.id
+
+  depends_on = [
+    azurerm_key_vault_access_policy.terraform_on_kv,
+  ]
+}
+
+resource "azurerm_key_vault_secret" "cortexia_database_pgpassword" {
+  name         = "PGPASSWORD"
+  value        = azurerm_postgresql_flexible_server.this.administrator_password
+  key_vault_id = azurerm_key_vault.this.id
+
+  depends_on = [
+    azurerm_key_vault_access_policy.terraform_on_kv,
+  ]
+}
+
+resource "azurerm_key_vault_secret" "cortexia_database_pguser" {
+  name         = "PGUSER"
+  value        = azurerm_postgresql_flexible_server.this.administrator_login
+  key_vault_id = azurerm_key_vault.this.id
+
+  depends_on = [
+    azurerm_key_vault_access_policy.terraform_on_kv,
+  ]
+}
+
+resource "azurerm_key_vault_secret" "cortexia_database_pgport" {
+  name         = "PGPORT"
+  value        = "5432"
+  key_vault_id = azurerm_key_vault.this.id
+
+  depends_on = [
+    azurerm_key_vault_access_policy.terraform_on_kv,
+  ]
 }
