@@ -1,6 +1,6 @@
 
-###########
-### Core
+##########
+## Core
 resource "azurerm_postgresql_flexible_server" "this" {
   name                   = var.name
   resource_group_name    = var.resource_group_name
@@ -62,19 +62,19 @@ resource "azurerm_subnet" "this" {
 }
 
 resource "azurerm_private_dns_zone" "this" {
-  name                = format("%s-zdns", var.name)
+  name                = var.private_dns_zone_name
   resource_group_name = var.resource_group_name
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "dns_net" {
-  name                  = format("%s-zdns-nl", var.name)
+  name                  = format("%s-zdns-nl", var.private_dns_zone_name)
   private_dns_zone_name = azurerm_private_dns_zone.this.name
   resource_group_name   = var.resource_group_name
   virtual_network_id    = var.virtual_network_id
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "dns_pipe_net" {
-  name                  = format("%s-zdns-nl-pipe-net", var.name)
+  name                  = format("%s-zdns-nl-pipe-net", var.private_dns_zone_name)
   private_dns_zone_name = azurerm_private_dns_zone.this.name
   resource_group_name   = var.resource_group_name
   virtual_network_id    = var.virtual_network_pipeline_id
@@ -148,42 +148,43 @@ resource "azurerm_key_vault_access_policy" "user_on_kv" {
   ]
 }
 
-resource "azurerm_key_vault_secret" "cortexia_database_pghost" {
-  name         = "PGHOST"
-  value        = azurerm_postgresql_flexible_server.this.fqdn
-  key_vault_id = azurerm_key_vault.this.id
+# resource "azurerm_key_vault_secret" "pg_database_pghost" {
+#   name         = "PGHOST"
+#   value        = azurerm_postgresql_flexible_server.this.fqdn
+#   key_vault_id = azurerm_key_vault.this.id
 
-  depends_on = [
-    azurerm_key_vault_access_policy.terraform_on_kv,
-  ]
-}
+#   depends_on = [
+#     azurerm_key_vault_access_policy.terraform_on_kv,
+#   ]
+# }
 
-resource "azurerm_key_vault_secret" "cortexia_database_pgpassword" {
-  name         = "PGPASSWORD"
-  value        = azurerm_postgresql_flexible_server.this.administrator_password
-  key_vault_id = azurerm_key_vault.this.id
+# resource "azurerm_key_vault_secret" "pg_database_pgpassword" {
+#   name         = "PGPASSWORD"
+#   value        = azurerm_postgresql_flexible_server.this.administrator_password
+#   key_vault_id = azurerm_key_vault.this.id
 
-  depends_on = [
-    azurerm_key_vault_access_policy.terraform_on_kv,
-  ]
-}
+#   depends_on = [
+#     azurerm_key_vault_access_policy.terraform_on_kv,
+#   ]
+# }
 
-resource "azurerm_key_vault_secret" "cortexia_database_pguser" {
-  name         = "PGUSER"
-  value        = azurerm_postgresql_flexible_server.this.administrator_login
-  key_vault_id = azurerm_key_vault.this.id
+# resource "azurerm_key_vault_secret" "pg_database_pguser" {
+#   name         = "PGUSER"
+#   value        = azurerm_postgresql_flexible_server.this.administrator_login
+#   key_vault_id = azurerm_key_vault.this.id
 
-  depends_on = [
-    azurerm_key_vault_access_policy.terraform_on_kv,
-  ]
-}
+#   depends_on = [
+#     azurerm_key_vault_access_policy.terraform_on_kv,
+#   ]
+# }
 
-resource "azurerm_key_vault_secret" "cortexia_database_pgport" {
-  name         = "PGPORT"
-  value        = "5432"
-  key_vault_id = azurerm_key_vault.this.id
+# resource "azurerm_key_vault_secret" "pg_database_pgport" {
+#   name         = "PGPORT"
+#   value        = "5432"
+#   key_vault_id = azurerm_key_vault.this.id
 
-  depends_on = [
-    azurerm_key_vault_access_policy.terraform_on_kv,
-  ]
-}
+#   depends_on = [
+#     azurerm_key_vault_access_policy.terraform_on_kv,
+#   ]
+# }
+
