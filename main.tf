@@ -1,15 +1,6 @@
 
 ###########
 ### Core
-
-resource "azurerm_management_lock" "this" {
-  count      = var.instance_lock ? 1 : 0
-  name       = format("%s-lock", azurerm_postgresql_flexible_server.this.name)
-  scope      = azurerm_postgresql_flexible_server.this.id
-  lock_level = "CanNotDelete"
-  notes      = "This is a security mechanism to prevent accidental deletion. Deleting a postgresql cluster drops all databases and also PITR backups."
-}
-
 resource "azurerm_postgresql_flexible_server" "this" {
   name                   = var.name
   resource_group_name    = var.resource_group_name
@@ -41,11 +32,19 @@ resource "azurerm_postgresql_flexible_server_configuration" "this" {
   value     = each.value
 }
 
+resource "azurerm_management_lock" "this" {
+  count      = var.instance_lock ? 1 : 0
+  name       = format("%s-mg-lock", azurerm_postgresql_flexible_server.this.name)
+  scope      = azurerm_postgresql_flexible_server.this.id
+  lock_level = "CanNotDelete"
+  notes      = "This is a security mechanism to prevent accidental deletion. Deleting a postgresql cluster drops all databases and also PITR backups."
+}
+
 ###########
 ### Network
 
 resource "azurerm_subnet" "this" {
-  name                 = var.subnet_name
+  name                 = format("%s-snet", var.name)
   resource_group_name  = var.resource_group_name
   virtual_network_name = var.virtual_network_name
   address_prefixes     = var.subnet_address_prefixes
@@ -63,31 +62,22 @@ resource "azurerm_subnet" "this" {
 }
 
 resource "azurerm_private_dns_zone" "this" {
-  name                = var.private_dns_zone_name
+  name                = format("%s-zdns", var.name)
   resource_group_name = var.resource_group_name
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "dns_net" {
-  name                  = format("%s-%s", var.name, var.virtual_network_name)
+  name                  = format("%s-zdns-nl", var.name)
   private_dns_zone_name = azurerm_private_dns_zone.this.name
   resource_group_name   = var.resource_group_name
   virtual_network_id    = var.virtual_network_id
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "dns_pipe_net" {
-  name                  = format("%s-dns-pipe-net", var.name)
+  name                  = format("%s-zdns-nl-pipe-net", var.name)
   private_dns_zone_name = azurerm_private_dns_zone.this.name
   resource_group_name   = var.resource_group_name
   virtual_network_id    = var.virtual_network_pipeline_id
-}
-
-
-###########
-### Secrets
-
-resource "random_password" "this" {
-  length  = 12
-  special = false
 }
 
 resource "azurerm_role_assignment" "contributors" {
@@ -98,6 +88,23 @@ resource "azurerm_role_assignment" "contributors" {
   scope                = azurerm_postgresql_flexible_server.this.id
 }
 
+###########
+### Secrets
+
+resource "random_password" "this" {
+  length  = 12
+  special = false
+}
+
+# Create Key Vault for user and services secrets
+resource "azurerm_key_vault" "this" {
+  name                       = format("%s-kv", var.name) 
+  location                   = var.location
+  resource_group_name        = var.resource_group_name
+  sku_name                   = "standard"
+  tenant_id                  = var.tenant_id
+  soft_delete_retention_days = 7
+}
 
 resource "azurerm_key_vault_access_policy" "terraform_on_kv" {
 

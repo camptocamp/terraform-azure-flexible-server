@@ -76,11 +76,6 @@ variable "name" {
   type        = string
 }
 
-variable "subnet_name" {
-  description = "Subnet Name for to be created."
-  type        = string
-}
-
 variable "subnet_address_prefixes" {
   description = "Address prefixes of Subnet to be created."
   type        = list(string)
