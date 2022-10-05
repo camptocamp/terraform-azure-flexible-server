@@ -98,12 +98,14 @@ resource "random_password" "this" {
 
 # Create Key Vault for user and services secrets
 resource "azurerm_key_vault" "this" {
-  name                       = format("%s-kv", var.name) 
-  location                   = var.location
-  resource_group_name        = var.resource_group_name
-  sku_name                   = "standard"
-  tenant_id                  = var.tenant_id
-  soft_delete_retention_days = 7
+  name                        = format("%s-kv", var.name) 
+  location                    = var.location
+  resource_group_name         = var.resource_group_name
+  sku_name                    = "standard"
+  tenant_id                   = var.tenant_id
+  soft_delete_retention_days  = 7
+  enable_rbac_authorization   = true
+  enabled_for_disk_encryption = true
 }
 
 resource "azurerm_key_vault_access_policy" "terraform_on_kv" {
