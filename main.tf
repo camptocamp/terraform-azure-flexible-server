@@ -150,43 +150,43 @@ resource "azurerm_key_vault_access_policy" "user_on_kv" {
   ]
 }
 
-# resource "azurerm_key_vault_secret" "pg_database_pghost" {
-#   name         = "PGHOST"
-#   value        = azurerm_postgresql_flexible_server.this.fqdn
-#   key_vault_id = azurerm_key_vault.this.id
+resource "azurerm_key_vault_secret" "pg_database_pghost" {
+  name         = "PGHOST"
+  value        = azurerm_postgresql_flexible_server.this.fqdn
+  key_vault_id = azurerm_key_vault.this.id
 
-#   depends_on = [
-#     azurerm_key_vault_access_policy.terraform_on_kv,
-#   ]
-# }
+  depends_on = [
+    azurerm_key_vault_access_policy.terraform_on_kv,
+  ]
+}
 
-# resource "azurerm_key_vault_secret" "pg_database_pgpassword" {
-#   name         = "PGPASSWORD"
-#   value        = azurerm_postgresql_flexible_server.this.administrator_password
-#   key_vault_id = azurerm_key_vault.this.id
+resource "azurerm_key_vault_secret" "pg_database_pgpassword" {
+  name         = "PGPASSWORD"
+  value        = azurerm_postgresql_flexible_server.this.administrator_password
+  key_vault_id = azurerm_key_vault.this.id
 
-#   depends_on = [
-#     azurerm_key_vault_access_policy.terraform_on_kv,
-#   ]
-# }
+  depends_on = [
+    azurerm_key_vault_access_policy.terraform_on_kv,
+  ]
+}
 
-# resource "azurerm_key_vault_secret" "pg_database_pguser" {
-#   name         = "PGUSER"
-#   value        = azurerm_postgresql_flexible_server.this.administrator_login
-#   key_vault_id = azurerm_key_vault.this.id
+resource "azurerm_key_vault_secret" "pg_database_pguser" {
+  name         = "PGUSER"
+  value        = azurerm_postgresql_flexible_server.this.administrator_login
+  key_vault_id = azurerm_key_vault.this.id
 
-#   depends_on = [
-#     azurerm_key_vault_access_policy.terraform_on_kv,
-#   ]
-# }
+  depends_on = [
+    azurerm_key_vault_access_policy.terraform_on_kv,
+  ]
+}
 
-# resource "azurerm_key_vault_secret" "pg_database_pgport" {
-#   name         = "PGPORT"
-#   value        = "5432"
-#   key_vault_id = azurerm_key_vault.this.id
+resource "azurerm_key_vault_secret" "pg_database_pgport" {
+  name         = "PGPORT"
+  value        = "5432"
+  key_vault_id = azurerm_key_vault.this.id
 
-#   depends_on = [
-#     azurerm_key_vault_access_policy.terraform_on_kv,
-#   ]
-# }
+  depends_on = [
+    azurerm_key_vault_access_policy.terraform_on_kv,
+  ]
+}
 
