@@ -1,34 +1,46 @@
-## Github Actions
+# Flexible-server module
 
-The pipelines are manage in the folder [.github/workflows/](.github/workflows)
+A terraform module to provision and configure PostgreSQL server on Azure.
+The azure service used for this it’s call FLEXIBLE-SERVER.
 
-### Terraform version 
+## Usage
 
-The pipeline setup terraform in a step that takes the version as a parameter (following [semver ranges](https://www.npmjs.com/package/semver#ranges))
-
-For exemple :
-```
-      - name: "Setup Terraform"
-        uses: "hashicorp/setup-terraform@v1"
-        with:
-          terraform_version: "~1.1.0"
-```
-Will always use get the last patch of the 1.1 release.
-
-### Access to private Github repositories
-
-To allow the pipeline to connect to private Github repositories, you must configure the following env variable:
-
-```
-CREDENTIALS_FOR_GH_PRIVATE_REPOS=https://[USER]:[TOKEN]@github.com/
-```
-
-> USER and TOKEN can be found in the following Gopass entry: `c2c/c2c_mgmtsrv/github-c2c-infra-robot/token`
-
-The workflow must also contain the following step:
-
-```
-- uses: de-vri-es/setup-git-credentials@v2
-  with:
-    credentials: ${{secrets.CREDENTIALS_FOR_GH_PRIVATE_REPOS}}
+```hcl
+module "flexible_server" {
+  source = "git::https://github.com/camptocamp/terraform-azure-flexible-server?ref=init"
+  name                = "fr-test-2"
+  resource_group_name = "default"
+  location            = "France Central"
+  contributors        = []
+  users_on_keyvault   = []
+  #terraformers_on_keyvault    = []
+  virtual_network_name        = ""
+  virtual_network_id          = ""
+  virtual_network_pipeline_id = ""
+  subnet_address_prefixes     = ["10.10.0.0/24"]
+  sku_name             = "GP_Standard_D4s_v3"
+  storage_mb           = 32768
+  private_dns_zone_name = "fr-test-2.privatelink.postgres.database.azure.com"
+  tenant_id             = ""
+  instance_lock         = false
+  postgresql_config = {
+    max_connections                  = "1600"
+    shared_buffers                   = "1048576" # 8KB => 8GB
+    effective_cache_size             = "3145728" # 8KB => 24GB
+    maintenance_work_mem             = "2097151" # KB => 2GB
+    checkpoint_completion_target     = "0.9"
+    wal_buffers                      = "2048" # 8KB => 16MB
+    default_statistics_target        = "100"
+    random_page_cost                 = "1.1"
+    effective_io_concurrency         = "200"
+    work_mem                         = "59392" # KB => 58MB
+    min_wal_size                     = "1024"  # MB => 1GB
+    max_wal_size                     = "4096"  # MB => 4GB
+    max_worker_processes             = "4"
+    max_parallel_workers_per_gather  = "2"
+    max_parallel_workers             = "4"
+    max_parallel_maintenance_workers = "2"
+    "azure.extensions"               = "DBLINK,PG_STAT_STATEMENTS,UNACCENT,POSTGIS,PG_TRGM"
+  }
+}
 ```
