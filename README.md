@@ -7,22 +7,16 @@ The azure service used for this it’s call FLEXIBLE-SERVER.
 
 ```hcl
 module "flexible_server" {
-  source = "git::https://github.com/camptocamp/terraform-azure-flexible-server?ref=init"
-  name                = "fr-test-2"
-  resource_group_name = "default"
-  location            = "France Central"
-  contributors        = []
-  users_on_keyvault   = []
-  #terraformers_on_keyvault    = []
-  virtual_network_name        = ""
-  virtual_network_id          = ""
-  virtual_network_pipeline_id = ""
+  source                      = "git::https://github.com/camptocamp/terraform-azure-flexible-server?ref=v0.0.1"
+  name                        = "my-psq-fx-srv"
+  resource_group_name         = "default"
+  location                    = "France Central"
   subnet_address_prefixes     = ["10.10.0.0/24"]
-  sku_name             = "GP_Standard_D4s_v3"
-  storage_mb           = 32768
-  private_dns_zone_name = "fr-test-2.privatelink.postgres.database.azure.com"
-  tenant_id             = ""
-  instance_lock         = false
+  sku_name                    = "GP_Standard_D4s_v3"
+  storage_mb                  = 32768
+  private_dns_zone_name       = "my-psq-fx-srv.privatelink.postgres.database.azure.com"
+  tenant_id                   = "<my-tenant-id>"
+  instance_lock               = false
   postgresql_config = {
     max_connections                  = "1600"
     shared_buffers                   = "1048576" # 8KB => 8GB
