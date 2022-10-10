@@ -72,7 +72,7 @@ variable "virtual_network_pipeline_id" {
 }
 
 variable "name" {
-  description = "Name for the PostgreSQL Flexible Server."
+  description = "Name for the PostgreSQL Flexible Server. This is also used for the DNS private zone name."
   type        = string
 }
 
