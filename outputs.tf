@@ -7,7 +7,7 @@ output "name" {
 }
 
 output "admin_login" {
-  value     = azurerm_postgresql_flexible_server.this.administrator_login
+  value = azurerm_postgresql_flexible_server.this.administrator_login
 }
 
 output "admin_password" {
