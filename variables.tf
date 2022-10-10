@@ -5,20 +5,20 @@ variable "location" {
 
 variable "contributors" {
   description = "List of service principal ID to have Contributor role for the PostgreSQL Flexible Server."
-  type = list(string)
-  default = []
+  type        = list(string)
+  default     = []
 }
 
 variable "users_on_keyvault" {
   description = "List of object ID (user, service principal or security group in the AD tenant) to have predifined user-like required access to kv."
-  type = list(string)
-  default = []
+  type        = list(string)
+  default     = []
 }
 
 variable "terraformers_on_keyvault" {
   description = "List of object ID (user, service principal or security group in the AD tenant) to have predifined terraform-like required access to kv."
-  type = list(string)
-  default = []
+  type        = list(string)
+  default     = []
 }
 
 variable "pg_version" {
@@ -99,11 +99,6 @@ variable "maintenance_window" {
     start_hour   = 0
     start_minute = 0
   }
-}
-
-variable "private_dns_zone_name" {
-  description = "The ID of the private DNS zone to create the PostgreSQL Flexible Server. Changing this forces a new PostgreSQL Flexible Server to be created."
-  type        = string
 }
 
 variable "postgresql_config" {

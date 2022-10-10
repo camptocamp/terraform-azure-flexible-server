@@ -14,7 +14,6 @@ module "flexible_server" {
   subnet_address_prefixes     = ["10.10.0.0/24"]
   sku_name                    = "GP_Standard_D4s_v3"
   storage_mb                  = 32768
-  private_dns_zone_name       = "my-psq-fx-srv.privatelink.postgres.database.azure.com"
   tenant_id                   = "<my-tenant-id>"
   instance_lock               = false
   postgresql_config = {
