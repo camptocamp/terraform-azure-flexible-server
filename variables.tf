@@ -102,7 +102,7 @@ variable "maintenance_window" {
 }
 
 variable "private_dns_zone_name" {
-  description = ""
+  description = "The ID of the private DNS zone to create the PostgreSQL Flexible Server. Changing this forces a new PostgreSQL Flexible Server to be created."
   type        = string
 }
 
