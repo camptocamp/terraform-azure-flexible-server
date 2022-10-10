@@ -98,7 +98,7 @@ resource "random_password" "this" {
 
 # Create Key Vault for user and services secrets
 resource "azurerm_key_vault" "this" {
-  name                        = format("%s-kv", var.name) 
+  name                        = format("%s-kv", var.name)
   location                    = var.location
   resource_group_name         = var.resource_group_name
   sku_name                    = "standard"
@@ -113,8 +113,8 @@ resource "azurerm_key_vault_access_policy" "terraform_on_kv" {
   for_each = toset(var.terraformers_on_keyvault)
 
   key_vault_id = azurerm_key_vault.this.id
-  tenant_id = var.tenant_id
-  object_id = each.key
+  tenant_id    = var.tenant_id
+  object_id    = each.key
 
   key_permissions = [
     "get",
@@ -131,12 +131,12 @@ resource "azurerm_key_vault_access_policy" "terraform_on_kv" {
 }
 
 resource "azurerm_key_vault_access_policy" "user_on_kv" {
-  
+
   for_each = toset(var.users_on_keyvault)
 
   key_vault_id = azurerm_key_vault.this.id
-  tenant_id = var.tenant_id
-  object_id = each.key
+  tenant_id    = var.tenant_id
+  object_id    = each.key
 
   secret_permissions = [
     "backup",
