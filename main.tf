@@ -92,7 +92,7 @@ resource "azurerm_role_assignment" "contributors" {
 ### Secrets
 
 resource "random_password" "this" {
-  length  = 12
+  length  = 32
   special = false
 }
 
