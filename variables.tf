@@ -79,6 +79,7 @@ variable "name" {
 variable "subnet_address_prefixes" {
   description = "Address prefixes of Subnet to be created."
   type        = list(string)
+  default     = []
 }
 
 variable "backup_retention_days" {

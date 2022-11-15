@@ -44,6 +44,7 @@ resource "azurerm_management_lock" "this" {
 ### Network
 
 resource "azurerm_subnet" "this" {
+  count                = var.subnet_address_prefixes ? 1 : 0
   name                 = format("%s-snet", var.name)
   resource_group_name  = var.resource_group_name
   virtual_network_name = var.virtual_network_name
