@@ -87,6 +87,12 @@ variable "backup_retention_days" {
   default     = 35
 }
 
+variable "geo_redundant_backup_enabled" {
+  description = "(Optional) Is Geo-Redundant backup enabled on the PostgreSQL Flexible Server. Defaults to false. Changing this forces a new PostgreSQL Flexible Server to be created."
+  type        = bool
+  default     = false
+}
+
 variable "maintenance_window" {
   description = "Cron maintenance window (default sunday midnight)."
   type = object({
