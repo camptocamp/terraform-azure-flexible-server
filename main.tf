@@ -116,16 +116,16 @@ resource "azurerm_key_vault_access_policy" "terraform_on_kv" {
   object_id    = each.key
 
   key_permissions = [
-    "get",
-    "create",
+    "Get",
+    "Create",
   ]
 
   secret_permissions = [
-    "delete",
-    "get",
-    "purge",
-    "recover",
-    "set",
+    "Delete",
+    "Get",
+    "Purge",
+    "Recover",
+    "Set",
   ]
 }
 
@@ -138,14 +138,14 @@ resource "azurerm_key_vault_access_policy" "user_on_kv" {
   object_id    = each.key
 
   secret_permissions = [
-    "backup",
-    "delete",
-    "get",
-    "list",
-    "purge",
-    "recover",
-    "restore",
-    "set",
+    "Backup",
+    "Delete",
+    "Get",
+    "List",
+    "Purge",
+    "Recover",
+    "Restore",
+    "Set",
   ]
 }
 
