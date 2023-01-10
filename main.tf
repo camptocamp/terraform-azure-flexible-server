@@ -19,6 +19,7 @@ resource "azurerm_postgresql_flexible_server" "this" {
     start_hour   = var.maintenance_window.start_hour
     start_minute = var.maintenance_window.start_minute
   }
+  create_mode = var.create_mode
 
   depends_on = [azurerm_private_dns_zone_virtual_network_link.dns_net, azurerm_private_dns_zone_virtual_network_link.dns_pipe_net]
 }
