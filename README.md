@@ -16,6 +16,7 @@ module "flexible_server" {
   storage_mb                  = 32768
   tenant_id                   = "<my-tenant-id>"
   instance_lock               = false
+  zone                        = 2
   postgresql_config = {
     max_connections                  = "1600"
     shared_buffers                   = "1048576" # 8KB => 8GB

@@ -93,6 +93,12 @@ variable "geo_redundant_backup_enabled" {
   default     = false
 }
 
+variable "zone" {
+  description = "(Optional) Specifies the Availability Zone in which the PostgreSQL Flexible Server should be located."
+  type        = string
+  default     = ""
+}
+
 variable "maintenance_window" {
   description = "Cron maintenance window (default sunday midnight)."
   type = object({
