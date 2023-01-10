@@ -5,6 +5,8 @@ The azure service used for this it’s call FLEXIBLE-SERVER.
 
 ## Usage
 
+### Server creation
+
 ```hcl
 module "flexible_server" {
   source                      = "git::https://github.com/camptocamp/terraform-azure-flexible-server?ref=v0.0.1"
@@ -37,3 +39,5 @@ module "flexible_server" {
   }
 }
 ```
+
+### Server restoration
