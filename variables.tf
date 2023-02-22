@@ -72,13 +72,31 @@ variable "virtual_network_pipeline_id" {
 }
 
 variable "name" {
-  description = "Name for the PostgreSQL Flexible Server. This is also used for the DNS private zone name."
+  description = "Name for the PostgreSQL Flexible Server. This is also used as default for DNS private zone, keyvault and snet names."
   type        = string
+}
+
+variable "private_dns_zone_name_prefix" {
+  description = "Private DNS private zone name prefix, if undefined  then `name` is used"
+  type        = string
+  default     = null
+}
+
+variable "subnet_name_prefix" {
+  description = "Subnet name prefix, if undefined  then `name` is used"
+  type        = string
+  default     = null
 }
 
 variable "subnet_address_prefixes" {
   description = "Address prefixes of Subnet to be created."
   type        = list(string)
+}
+
+variable "keyvault_name_prefix" {
+  description = "Keyvault name prefix, if undefined  then `name` is used"
+  type        = string
+  default     = null
 }
 
 variable "backup_retention_days" {
