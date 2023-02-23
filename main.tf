@@ -44,7 +44,7 @@ resource "azurerm_management_lock" "this" {
 ### Network
 
 resource "azurerm_subnet" "this" {
-  name                 = format("%s-snet", var.name)
+  name                 = format("%s-snet", var.subnet_name_prefix != null ? var.subnet_name_prefix : var.name)
   resource_group_name  = var.resource_group_name
   virtual_network_name = var.virtual_network_name
   address_prefixes     = var.subnet_address_prefixes
@@ -62,7 +62,7 @@ resource "azurerm_subnet" "this" {
 }
 
 resource "azurerm_private_dns_zone" "this" {
-  name                = format("%s.privatelink.postgres.database.azure.com", var.name)
+  name                = format("%s.privatelink.postgres.database.azure.com", var.private_dns_zone_name_prefix != null ? var.private_dns_zone_name_prefix : var.name)
   resource_group_name = var.resource_group_name
 }
 
@@ -98,7 +98,7 @@ resource "random_password" "this" {
 
 # Create Key Vault for user and services secrets
 resource "azurerm_key_vault" "this" {
-  name                        = format("%s-kv", var.name)
+  name                        = format("%s-kv", var.keyvault_name_prefix != null ? var.keyvault_name_prefix : var.name)
   location                    = var.location
   resource_group_name         = var.resource_group_name
   sku_name                    = "standard"
