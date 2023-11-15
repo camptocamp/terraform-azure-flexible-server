@@ -31,7 +31,12 @@ variable "administrator_login" {
   description = "Postgresql admin name"
   type        = string
   default     = "psqladmin"
+}
 
+variable "administrator_password" {
+  description = "Postgresql admin password"
+  type        = string
+  default     = null
 }
 
 variable "sku_name" {

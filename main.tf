@@ -9,7 +9,7 @@ resource "azurerm_postgresql_flexible_server" "this" {
   delegated_subnet_id          = azurerm_subnet.this.id
   private_dns_zone_id          = azurerm_private_dns_zone.this.id
   administrator_login          = var.administrator_login
-  administrator_password       = random_password.this.result
+  administrator_password       = var.administrator_password != null ? var.administrator_password : random_password.this.result
   sku_name                     = var.sku_name
   storage_mb                   = var.storage_mb
   backup_retention_days        = var.backup_retention_days
