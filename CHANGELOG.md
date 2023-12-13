@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/camptocamp/terraform-azure-flexible-server/compare/v1.1.0...v1.1.1) (2023-12-13)
+
+
+### Bug Fixes
+
+* **maintenance:** change default maintenance window ([5084b58](https://github.com/camptocamp/terraform-azure-flexible-server/commit/5084b586b71ea2270a767d0638305ec79c7eeb8c))
+
 ## [1.1.0](https://github.com/camptocamp/terraform-azure-flexible-server/compare/v1.0.4...v1.1.0) (2023-02-23)
 
 
