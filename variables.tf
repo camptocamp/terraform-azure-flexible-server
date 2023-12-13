@@ -118,7 +118,7 @@ variable "zone" {
 }
 
 variable "maintenance_window" {
-  description = "Cron maintenance window (default sunday midnight)."
+  description = "Cron maintenance window (default sunday 23:59."
   type = object({
     day_of_week  = number
     start_hour   = number
@@ -126,8 +126,8 @@ variable "maintenance_window" {
   })
   default = {
     day_of_week  = 0
-    start_hour   = 0
-    start_minute = 0
+    start_hour   = 23
+    start_minute = 59
   }
 }
 
