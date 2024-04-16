@@ -51,6 +51,11 @@ variable "resource_group_name" {
   type        = string
 }
 
+variable "vnet_resource_group_name" {
+  description = "VNET Resource group name"
+  type        = string
+}
+
 variable "tenant_id" {
   description = "Tenant ID."
   type        = string
