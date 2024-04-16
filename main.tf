@@ -45,7 +45,7 @@ resource "azurerm_management_lock" "this" {
 
 resource "azurerm_subnet" "this" {
   name                 = format("%s-snet", var.subnet_name_prefix != null ? var.subnet_name_prefix : var.name)
-  resource_group_name  = var.resource_group_name
+  resource_group_name  = var.vnet_resource_group_name != null ? var.vnet_resource_group_name : var.resource_group_name
   virtual_network_name = var.virtual_network_name
   address_prefixes     = var.subnet_address_prefixes
   service_endpoints    = ["Microsoft.Storage"]
