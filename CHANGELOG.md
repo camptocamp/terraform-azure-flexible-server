@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/camptocamp/terraform-azure-flexible-server/compare/v1.2.0...v1.3.0) (2024-04-30)
+
+
+### Features
+
+* **output:** add id output ([75c7957](https://github.com/camptocamp/terraform-azure-flexible-server/commit/75c7957fcc3fbd6d8a1c616821336b80a8e9d126))
+
 ## [1.2.0](https://github.com/camptocamp/terraform-azure-flexible-server/compare/v1.1.1...v1.2.0) (2024-04-30)
 
 
