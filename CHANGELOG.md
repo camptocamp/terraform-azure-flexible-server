@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/camptocamp/terraform-azure-flexible-server/compare/v1.1.1...v1.2.0) (2024-04-30)
+
+
+### Features
+
+* **vnet:** permit to specify a vnet ([059c9c6](https://github.com/camptocamp/terraform-azure-flexible-server/commit/059c9c62fe7d36b22667f834982d8dec7d2d5cd7))
+
 ## [1.1.1](https://github.com/camptocamp/terraform-azure-flexible-server/compare/v1.1.0...v1.1.1) (2023-12-13)
 
 
