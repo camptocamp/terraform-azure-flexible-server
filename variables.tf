@@ -61,6 +61,18 @@ variable "tenant_id" {
   type        = string
 }
 
+variable "create_subnet" {
+  description = "Create Subnet for PostgreSQL Flexible Server."
+  type        = bool
+  default     = false
+}
+
+variable "delegated_subnet_id" {
+  description = "Delegated Subnet ID for PostgreSQL Flexible Server."
+  type        = string
+  default     = ""
+}
+
 variable "virtual_network_name" {
   description = "Virtual Network Name where Subnet will be created."
   type        = string
