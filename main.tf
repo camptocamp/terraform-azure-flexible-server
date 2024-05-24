@@ -6,7 +6,7 @@ resource "azurerm_postgresql_flexible_server" "this" {
   resource_group_name          = var.resource_group_name
   location                     = var.location
   version                      = var.pg_version
-  delegated_subnet_id          = azurerm_subnet.this.id
+  delegated_subnet_id          = var.create_subnet ? azurerm_subnet.this[0].id : var.delegated_subnet_id
   private_dns_zone_id          = azurerm_private_dns_zone.this.id
   administrator_login          = var.administrator_login
   administrator_password       = random_password.this.result
@@ -43,7 +43,15 @@ resource "azurerm_management_lock" "this" {
 ###########
 ### Network
 
+# module.dbs["alloboissons-1-int"].azurerm_subnet.this has moved to module.dbs["alloboissons-1-int"].azurerm_subnet.this[0]
+
+moved {
+  from = azurerm_subnet.this
+  to   = azurerm_subnet.this[0]
+}
+
 resource "azurerm_subnet" "this" {
+  count                = var.create_subnet ? 1 : 0
   name                 = format("%s-snet", var.subnet_name_prefix != null ? var.subnet_name_prefix : var.name)
   resource_group_name  = var.vnet_resource_group_name != null ? var.vnet_resource_group_name : var.resource_group_name
   virtual_network_name = var.virtual_network_name
@@ -60,6 +68,8 @@ resource "azurerm_subnet" "this" {
     }
   }
 }
+
+
 
 resource "azurerm_private_dns_zone" "this" {
   name                = format("%s.privatelink.postgres.database.azure.com", var.private_dns_zone_name_prefix != null ? var.private_dns_zone_name_prefix : var.name)
