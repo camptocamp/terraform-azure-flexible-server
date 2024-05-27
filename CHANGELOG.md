@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/camptocamp/terraform-azure-flexible-server/compare/v1.3.0...v1.4.0) (2024-05-27)
+
+
+### Features
+
+* **subnet:** permit to use default subnet ([38e7457](https://github.com/camptocamp/terraform-azure-flexible-server/commit/38e74578cb9946ef8a41de096516e870179a8cb4))
+
 ## [1.3.0](https://github.com/camptocamp/terraform-azure-flexible-server/compare/v1.2.0...v1.3.0) (2024-04-30)
 
 
