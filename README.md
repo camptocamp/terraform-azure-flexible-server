@@ -38,3 +38,5 @@ module "flexible_server" {
   }
 }
 ```
+
+This is a simple sysdig pr integration test
