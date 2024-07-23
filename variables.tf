@@ -100,6 +100,12 @@ variable "private_dns_zone_name_prefix" {
   default     = null
 }
 
+variable "public_network_access_enabled" {
+  description = "Is public network access enabled on the PostgreSQL Flexible Server."
+  type        = bool
+  default     = false
+}
+
 variable "subnet_name_prefix" {
   description = "Subnet name prefix, if undefined  then `name` is used"
   type        = string
