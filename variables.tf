@@ -81,6 +81,7 @@ variable "virtual_network_name" {
 variable "virtual_network_id" {
   description = "Virtual Network ID where Subnet will be created."
   type        = string
+  default     = false
 }
 
 variable "virtual_network_pipeline_id" {
@@ -97,6 +98,12 @@ variable "private_dns_zone_name_prefix" {
   description = "Private DNS private zone name prefix, if undefined  then `name` is used"
   type        = string
   default     = null
+}
+
+variable "public_network_access_enabled" {
+  description = "Is public network access enabled on the PostgreSQL Flexible Server."
+  type        = bool
+  default     = false
 }
 
 variable "subnet_name_prefix" {
