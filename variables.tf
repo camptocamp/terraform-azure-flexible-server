@@ -116,6 +116,12 @@ variable "keyvault_name_prefix" {
   default     = null
 }
 
+variable "public_network_access_enabled" {
+  description = "Is public network access enabled on the PostgreSQL Flexible Server."
+  type        = bool
+  default     = false
+}
+
 variable "backup_retention_days" {
   description = "Backup retention days for the PostgreSQL Flexible Server."
   type        = number
