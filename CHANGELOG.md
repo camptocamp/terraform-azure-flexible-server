@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1](https://github.com/camptocamp/terraform-azure-flexible-server/compare/v1.4.0...v1.4.1) (2024-09-05)
+
+
+### Bug Fixes
+
+* pemit to disable public network ([6d32fae](https://github.com/camptocamp/terraform-azure-flexible-server/commit/6d32fae7f29648cc429e0eb6189aa8084e8ee619))
+
 ## [1.4.0](https://github.com/camptocamp/terraform-azure-flexible-server/compare/v1.3.0...v1.4.0) (2024-05-27)
 
 
