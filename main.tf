@@ -44,8 +44,6 @@ resource "azurerm_management_lock" "this" {
 ###########
 ### Network
 
-# module.dbs["alloboissons-1-int"].azurerm_subnet.this has moved to module.dbs["alloboissons-1-int"].azurerm_subnet.this[0]
-
 moved {
   from = azurerm_subnet.this
   to   = azurerm_subnet.this[0]
