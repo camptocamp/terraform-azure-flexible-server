@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/camptocamp/terraform-azure-flexible-server/compare/v1.4.1...v1.5.0) (2024-10-14)
+
+
+### Features
+
+* allow to opt-out from vnet pipeline id dns integration ([dab7d71](https://github.com/camptocamp/terraform-azure-flexible-server/commit/dab7d71bb5871a0cf47e384a509dde580e29b5d9))
+
 ## [1.4.1](https://github.com/camptocamp/terraform-azure-flexible-server/compare/v1.4.0...v1.4.1) (2024-09-05)
 
 
