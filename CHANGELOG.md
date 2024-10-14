@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/camptocamp/terraform-azure-flexible-server/compare/v1.5.0...v1.5.1) (2024-10-14)
+
+
+### Bug Fixes
+
+* delete comment ([83c94a9](https://github.com/camptocamp/terraform-azure-flexible-server/commit/83c94a98ce15933baaa107ce6639c36177737d48))
+
 ## [1.5.0](https://github.com/camptocamp/terraform-azure-flexible-server/compare/v1.4.1...v1.5.0) (2024-10-14)
 
 
