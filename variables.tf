@@ -86,6 +86,7 @@ variable "virtual_network_id" {
 variable "virtual_network_pipeline_id" {
   description = "Virtual Network ID where Subnet will be created."
   type        = string
+  default     = null
 }
 
 variable "name" {
