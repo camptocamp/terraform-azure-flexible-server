@@ -22,7 +22,7 @@ resource "azurerm_postgresql_flexible_server" "this" {
   }
   zone = var.zone
 
-  depends_on = [azurerm_private_dns_zone_virtual_network_link.dns_net, azurerm_private_dns_zone_virtual_network_link.dns_pipe_net]
+  depends_on = [azurerm_private_dns_zone_virtual_network_link.dns_net]
 }
 
 resource "azurerm_postgresql_flexible_server_configuration" "this" {
@@ -84,7 +84,15 @@ resource "azurerm_private_dns_zone_virtual_network_link" "dns_net" {
   virtual_network_id    = var.virtual_network_id
 }
 
+moved {
+  from = azurerm_private_dns_zone_virtual_network_link.dns_pipe_net
+  to   = azurerm_private_dns_zone_virtual_network_link.dns_pipe_net[0]
+}
+
+
 resource "azurerm_private_dns_zone_virtual_network_link" "dns_pipe_net" {
+  count = var.virtual_network_pipeline_id != null ? 1 : 0
+
   name                  = format("%s-zdns-nl-pipe-net", azurerm_private_dns_zone.this.name)
   private_dns_zone_name = azurerm_private_dns_zone.this.name
   resource_group_name   = var.resource_group_name
