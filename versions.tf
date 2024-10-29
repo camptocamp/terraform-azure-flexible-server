@@ -3,8 +3,5 @@ terraform {
     azurerm = {
       source = "hashicorp/azurerm"
     }
-    kubernetes = {
-      source = "hashicorp/kubernetes"
-    }
   }
 }
