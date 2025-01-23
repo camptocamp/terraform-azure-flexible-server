@@ -183,3 +183,21 @@ variable "instance_lock" {
   type        = bool
   default     = true
 }
+
+variable "create_mode" {
+  description = "The mode to create a new PostgreSQL Flexible Server. useful for PointInTimeRestore"
+  type        = string
+  default     = "Default"
+}
+
+variable "source_server_id" {
+  description = "The source PostgreSQL Flexible Server ID to restore from. Required when create_mode is PointInTimeRestore."
+  type        = string
+  default     = null
+}
+
+variable "point_in_time_restore_time_in_utc" {
+  description = "The point in time to restore the PostgreSQL Flexible Server to. Required when create_mode is PointInTimeRestore."
+  type        = string
+  default     = null
+}
