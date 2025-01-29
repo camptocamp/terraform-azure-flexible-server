@@ -85,7 +85,7 @@ moved {
 
 
 resource "azurerm_private_dns_zone_virtual_network_link" "dns_net" {
-  count                 = var.virtual_network_id && var.create_private_dns_zone ? 1 : 0
+  count                 = var.virtual_network_id != null && var.create_private_dns_zone ? 1 : 0
   name                  = format("%s-zdns-nl", azurerm_private_dns_zone.this[0].name)
   private_dns_zone_name = azurerm_private_dns_zone.this[0].name
   resource_group_name   = var.resource_group_name
