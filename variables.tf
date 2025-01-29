@@ -76,11 +76,13 @@ variable "delegated_subnet_id" {
 variable "virtual_network_name" {
   description = "Virtual Network Name where Subnet will be created."
   type        = string
+  default     = null
 }
 
 variable "virtual_network_id" {
   description = "Virtual Network ID where Subnet will be created."
   type        = string
+  default     = null
 }
 
 variable "virtual_network_pipeline_id" {
