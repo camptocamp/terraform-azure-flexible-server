@@ -77,7 +77,9 @@ resource "azurerm_private_dns_zone" "this" {
   resource_group_name = var.resource_group_name
 }
 
+
 resource "azurerm_private_dns_zone_virtual_network_link" "dns_net" {
+  count                = var.virtual_network_id != null ? 1 : 0
   name                  = format("%s-zdns-nl", azurerm_private_dns_zone.this.name)
   private_dns_zone_name = azurerm_private_dns_zone.this.name
   resource_group_name   = var.resource_group_name
