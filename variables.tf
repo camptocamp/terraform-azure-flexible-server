@@ -67,6 +67,13 @@ variable "create_subnet" {
   default     = false
 }
 
+variable "create_private_dns_zone" {
+  description = "Create Private dns zone for PostgreSQL Flexible Server."
+  type        = bool
+  default     = false
+}
+
+
 variable "delegated_subnet_id" {
   description = "Delegated Subnet ID for PostgreSQL Flexible Server."
   type        = string
