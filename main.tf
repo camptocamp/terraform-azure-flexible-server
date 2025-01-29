@@ -7,7 +7,7 @@ resource "azurerm_postgresql_flexible_server" "this" {
   location                      = var.location
   version                       = var.pg_version
   delegated_subnet_id           = var.create_subnet ? azurerm_subnet.this[0].id : var.delegated_subnet_id
-  private_dns_zone_id           = var.create_private_dns_zone ? azurerm_private_dns_zone.this.id
+  private_dns_zone_id           = var.create_private_dns_zone ? azurerm_private_dns_zone.this.id : null
   public_network_access_enabled = var.public_network_access_enabled
   administrator_login           = var.administrator_login
   administrator_password        = random_password.this.result
@@ -80,7 +80,7 @@ resource "azurerm_private_dns_zone" "this" {
 
 
 resource "azurerm_private_dns_zone_virtual_network_link" "dns_net" {
-  count                = var.virtual_network_id != null ? 1 : 0
+  count                 = var.virtual_network_id != null ? 1 : 0
   name                  = format("%s-zdns-nl", azurerm_private_dns_zone.this.name)
   private_dns_zone_name = azurerm_private_dns_zone.this.name
   resource_group_name   = var.resource_group_name
