@@ -77,7 +77,7 @@ variable "create_private_dns_zone" {
 variable "delegated_subnet_id" {
   description = "Delegated Subnet ID for PostgreSQL Flexible Server."
   type        = string
-  default     = ""
+  default     = null
 }
 
 variable "virtual_network_name" {
