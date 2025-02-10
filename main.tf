@@ -115,6 +115,19 @@ resource "azurerm_role_assignment" "contributors" {
   scope                = azurerm_postgresql_flexible_server.this.id
 }
 
+
+###########
+### Firewall
+
+resource "azurerm_postgresql_flexible_server_firewall_rule" "this" {
+  for_each = var.enabled_ips
+
+  name             = each.key
+  server_id        = azurerm_postgresql_flexible_server.this.id
+  start_ip_address = each.value.start_ip
+  end_ip_address   = each.value.end_ip
+}
+
 ###########
 ### Secrets
 

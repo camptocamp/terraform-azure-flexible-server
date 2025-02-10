@@ -187,6 +187,15 @@ variable "postgresql_config" {
   }
 }
 
+variable "enabled_ips" {
+  description = "IPv4 list to allow access to the PostgreSQL Flexible Server."
+  type = map(object({
+    start_ip = string
+    end_ip   = string
+  }))
+  default = {}
+}
+
 variable "instance_lock" {
   description = "If true, it’s not possible to remove the flexible-server"
   type        = bool
