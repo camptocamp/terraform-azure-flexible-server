@@ -148,6 +148,7 @@ resource "azurerm_key_vault" "this" {
   enabled_for_disk_encryption = true
 }
 
+# old , is this dead code
 resource "azurerm_key_vault_access_policy" "terraform_on_kv" {
 
   for_each = toset(var.terraformers_on_keyvault)
@@ -170,6 +171,16 @@ resource "azurerm_key_vault_access_policy" "terraform_on_kv" {
   ]
 }
 
+# new RBAC approach
+resource "azurerm_role_assignment" "terraform_on_kv" {
+  for_each = toset(var.terraformers_on_keyvault)
+
+  principal_id         = each.key
+  role_definition_name = "Key Vault Administrator"
+  scope                = azurerm_key_vault.this.id
+}
+
+# old, probably dead code
 resource "azurerm_key_vault_access_policy" "user_on_kv" {
 
   for_each = toset(var.users_on_keyvault)
@@ -188,6 +199,16 @@ resource "azurerm_key_vault_access_policy" "user_on_kv" {
     "Restore",
     "Set",
   ]
+}
+
+
+# new RBAC approach
+resource "azurerm_role_assignment" "user_on_kv" {
+  for_each = toset(var.users_on_keyvault)
+
+  principal_id         = each.key
+  role_definition_name = "Key Vault Secrets User"
+  scope                = azurerm_key_vault.this.id
 }
 
 resource "azurerm_key_vault_secret" "pg_database_pghost" {
