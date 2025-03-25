@@ -207,3 +207,22 @@ resource "azurerm_key_vault_secret" "pg_database_pgport" {
   ]
 }
 
+resource "azurerm_key_vault_secret" "az_pg_name" {
+  name         = "az-pg-name"
+  value        = var.name
+  key_vault_id = azurerm_key_vault.this.id
+
+  depends_on = [
+    azurerm_key_vault_access_policy.terraform_on_kv,
+  ]
+}
+
+resource "azurerm_key_vault_secret" "az_pg_rg" {
+  name         = "az-pg-rg"
+  value        = var.resource_group_name
+  key_vault_id = azurerm_key_vault.this.id
+
+  depends_on = [
+    azurerm_key_vault_access_policy.terraform_on_kv,
+  ]
+}
