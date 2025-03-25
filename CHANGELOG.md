@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.6.0](https://github.com/camptocamp/terraform-azure-flexible-server/compare/v1.5.0...v1.6.0) (2025-03-25)
+
+
+### Features
+
+* **secret:** add server name and ressource group name to keyvault ([b9c93a3](https://github.com/camptocamp/terraform-azure-flexible-server/commit/b9c93a30b3ff05e1a765d1b04bc7d12127cd6460))
+
+
+### Bug Fixes
+
+* delete comment ([83c94a9](https://github.com/camptocamp/terraform-azure-flexible-server/commit/83c94a98ce15933baaa107ce6639c36177737d48))
+* **providers:** do not require kubernetes provider ([aac0680](https://github.com/camptocamp/terraform-azure-flexible-server/commit/aac0680eecd4ba10cc7f4e96e16c7e7d521d26e3))
+
 ## [1.5.0](https://github.com/camptocamp/terraform-azure-flexible-server/compare/v1.4.1...v1.5.0) (2024-10-14)
 
 
