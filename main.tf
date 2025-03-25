@@ -7,7 +7,7 @@ resource "azurerm_postgresql_flexible_server" "this" {
   location                      = var.location
   version                       = var.pg_version
   delegated_subnet_id           = var.create_subnet ? azurerm_subnet.this[0].id : var.delegated_subnet_id
-  private_dns_zone_id           = azurerm_private_dns_zone.this.id
+  private_dns_zone_id           = var.create_private_dns_zone ? azurerm_private_dns_zone.this[0].id : null
   public_network_access_enabled = var.public_network_access_enabled
   administrator_login           = var.administrator_login
   administrator_password        = random_password.this.result
@@ -20,9 +20,11 @@ resource "azurerm_postgresql_flexible_server" "this" {
     start_hour   = var.maintenance_window.start_hour
     start_minute = var.maintenance_window.start_minute
   }
-  zone = var.zone
-
-  depends_on = [azurerm_private_dns_zone_virtual_network_link.dns_net]
+  zone                              = var.zone
+  create_mode                       = var.create_mode
+  point_in_time_restore_time_in_utc = try(var.point_in_time_restore_time_in_utc, null)
+  source_server_id                  = try(var.source_server_id, null)
+  depends_on                        = [azurerm_private_dns_zone_virtual_network_link.dns_net]
 }
 
 resource "azurerm_postgresql_flexible_server_configuration" "this" {
@@ -71,13 +73,21 @@ resource "azurerm_subnet" "this" {
 
 
 resource "azurerm_private_dns_zone" "this" {
+  count               = var.create_private_dns_zone ? 1 : 0
   name                = format("%s.privatelink.postgres.database.azure.com", var.private_dns_zone_name_prefix != null ? var.private_dns_zone_name_prefix : var.name)
   resource_group_name = var.resource_group_name
 }
 
+moved {
+  from = azurerm_private_dns_zone.this
+  to   = azurerm_private_dns_zone.this[0]
+}
+
+
 resource "azurerm_private_dns_zone_virtual_network_link" "dns_net" {
-  name                  = format("%s-zdns-nl", azurerm_private_dns_zone.this.name)
-  private_dns_zone_name = azurerm_private_dns_zone.this.name
+  count                 = var.virtual_network_id != null && var.create_private_dns_zone ? 1 : 0
+  name                  = format("%s-zdns-nl", azurerm_private_dns_zone.this[0].name)
+  private_dns_zone_name = azurerm_private_dns_zone.this[0].name
   resource_group_name   = var.resource_group_name
   virtual_network_id    = var.virtual_network_id
 }
@@ -89,10 +99,10 @@ moved {
 
 
 resource "azurerm_private_dns_zone_virtual_network_link" "dns_pipe_net" {
-  count = var.virtual_network_pipeline_id != null ? 1 : 0
+  count = var.virtual_network_pipeline_id != null && var.create_private_dns_zone ? 1 : 0
 
-  name                  = format("%s-zdns-nl-pipe-net", azurerm_private_dns_zone.this.name)
-  private_dns_zone_name = azurerm_private_dns_zone.this.name
+  name                  = format("%s-zdns-nl-pipe-net", azurerm_private_dns_zone.this[0].name)
+  private_dns_zone_name = azurerm_private_dns_zone.this[0].name
   resource_group_name   = var.resource_group_name
   virtual_network_id    = var.virtual_network_pipeline_id
 }
