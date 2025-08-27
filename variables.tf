@@ -67,20 +67,29 @@ variable "create_subnet" {
   default     = false
 }
 
+variable "create_private_dns_zone" {
+  description = "Create Private dns zone for PostgreSQL Flexible Server."
+  type        = bool
+  default     = false
+}
+
+
 variable "delegated_subnet_id" {
   description = "Delegated Subnet ID for PostgreSQL Flexible Server."
   type        = string
-  default     = ""
+  default     = null
 }
 
 variable "virtual_network_name" {
   description = "Virtual Network Name where Subnet will be created."
   type        = string
+  default     = null
 }
 
 variable "virtual_network_id" {
   description = "Virtual Network ID where Subnet will be created."
   type        = string
+  default     = null
 }
 
 variable "virtual_network_pipeline_id" {
@@ -178,8 +187,35 @@ variable "postgresql_config" {
   }
 }
 
+variable "enabled_ips" {
+  description = "IPv4 list to allow access to the PostgreSQL Flexible Server."
+  type = map(object({
+    start_ip = string
+    end_ip   = string
+  }))
+  default = {}
+}
+
 variable "instance_lock" {
   description = "If true, it’s not possible to remove the flexible-server"
   type        = bool
   default     = true
+}
+
+variable "create_mode" {
+  description = "The mode to create a new PostgreSQL Flexible Server. useful for PointInTimeRestore"
+  type        = string
+  default     = "Default"
+}
+
+variable "source_server_id" {
+  description = "The source PostgreSQL Flexible Server ID to restore from. Required when create_mode is PointInTimeRestore."
+  type        = string
+  default     = null
+}
+
+variable "point_in_time_restore_time_in_utc" {
+  description = "The point in time to restore the PostgreSQL Flexible Server to. Required when create_mode is PointInTimeRestore."
+  type        = string
+  default     = null
 }
