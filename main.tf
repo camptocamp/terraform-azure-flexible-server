@@ -23,6 +23,12 @@ resource "azurerm_postgresql_flexible_server" "this" {
   zone = var.zone
 
   depends_on = [azurerm_private_dns_zone_virtual_network_link.dns_net, azurerm_private_dns_zone_virtual_network_link.dns_pipe_net]
+
+  lifecycle {
+    ignore_changes = [
+      version
+    ]
+  }
 }
 
 resource "azurerm_postgresql_flexible_server_configuration" "this" {
