@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/camptocamp/terraform-azure-flexible-server/compare/v1.6.0...v1.7.0) (2026-04-21)
+
+
+### Features
+
+* allow tagging resources ([7749b3f](https://github.com/camptocamp/terraform-azure-flexible-server/commit/7749b3f80b466651e76fc6d980b2d8e9df6cf153))
+
 ## [1.6.0](https://github.com/camptocamp/terraform-azure-flexible-server/compare/v1.5.0...v1.6.0) (2025-03-25)
 
 
