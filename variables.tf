@@ -183,3 +183,9 @@ variable "instance_lock" {
   type        = bool
   default     = true
 }
+
+variable "tags" {
+  description = "A map of tags to assign to the resources"
+  type        = map(string)
+  default     = {}
+}
