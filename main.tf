@@ -1,4 +1,3 @@
-
 ##########
 ## Core
 resource "azurerm_postgresql_flexible_server" "this" {
@@ -21,6 +20,7 @@ resource "azurerm_postgresql_flexible_server" "this" {
     start_minute = var.maintenance_window.start_minute
   }
   zone = var.zone
+  tags = var.tags
 
   depends_on = [azurerm_private_dns_zone_virtual_network_link.dns_net]
 }
@@ -66,6 +66,7 @@ resource "azurerm_subnet" "this" {
       ]
     }
   }
+
 }
 
 
@@ -73,6 +74,7 @@ resource "azurerm_subnet" "this" {
 resource "azurerm_private_dns_zone" "this" {
   name                = format("%s.privatelink.postgres.database.azure.com", var.private_dns_zone_name_prefix != null ? var.private_dns_zone_name_prefix : var.name)
   resource_group_name = var.resource_group_name
+  tags                = var.tags
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "dns_net" {
@@ -80,6 +82,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "dns_net" {
   private_dns_zone_name = azurerm_private_dns_zone.this.name
   resource_group_name   = var.resource_group_name
   virtual_network_id    = var.virtual_network_id
+  tags                  = var.tags
 }
 
 moved {
@@ -95,6 +98,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "dns_pipe_net" {
   private_dns_zone_name = azurerm_private_dns_zone.this.name
   resource_group_name   = var.resource_group_name
   virtual_network_id    = var.virtual_network_pipeline_id
+  tags                  = var.tags
 }
 
 resource "azurerm_role_assignment" "contributors" {
@@ -123,6 +127,7 @@ resource "azurerm_key_vault" "this" {
   soft_delete_retention_days  = 7
   enable_rbac_authorization   = true
   enabled_for_disk_encryption = true
+  tags                        = var.tags
 }
 
 resource "azurerm_key_vault_access_policy" "terraform_on_kv" {
