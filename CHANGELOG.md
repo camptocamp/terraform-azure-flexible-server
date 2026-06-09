@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.7.0](https://github.com/camptocamp/terraform-azure-flexible-server/compare/v1.6.0...v1.7.0) (2026-06-09)
+
+
+### Features
+
+* allow tagging resources ([7749b3f](https://github.com/camptocamp/terraform-azure-flexible-server/commit/7749b3f80b466651e76fc6d980b2d8e9df6cf153))
+
+
+### Bug Fixes
+
+* **ci:** bump deprecated release-please action version ([cb20b16](https://github.com/camptocamp/terraform-azure-flexible-server/commit/cb20b16821c28fab3155226dc47da5c22c8be8e6))
+* **ci:** config files ([f07a7cb](https://github.com/camptocamp/terraform-azure-flexible-server/commit/f07a7cb59bd15de4b2fdf0420cb9feab7de249a2))
+* **ci:** config files ([f8cf7ba](https://github.com/camptocamp/terraform-azure-flexible-server/commit/f8cf7ba5b1cc72d7c826406304482d29df6dce66))
+* **ci:** create config file ([f579b7c](https://github.com/camptocamp/terraform-azure-flexible-server/commit/f579b7c31810d77fd603dd8129c0daa026a4a5a9))
+
 ## [1.7.0](https://github.com/camptocamp/terraform-azure-flexible-server/compare/v1.6.0...v1.7.0) (2026-04-21)
 
 
