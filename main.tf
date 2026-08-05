@@ -33,6 +33,22 @@ resource "azurerm_postgresql_flexible_server_configuration" "this" {
   value     = each.value
 }
 
+resource "azurerm_postgresql_flexible_server_configuration" "log_acivation" {
+  for_each = var.postgresql_config
+
+  name      = "logfiles.download_enabled"
+  server_id = azurerm_postgresql_flexible_server.this.id
+  value     = "ON"
+}
+
+resource "azurerm_postgresql_flexible_server_configuration" "log_retention" {
+  for_each = var.postgresql_config
+
+  name      = "logfiles.retention_days"
+  server_id = azurerm_postgresql_flexible_server.this.id
+  value     = "3"
+}
+
 resource "azurerm_management_lock" "this" {
   count      = var.instance_lock ? 1 : 0
   name       = format("%s-mg-lock", azurerm_postgresql_flexible_server.this.name)
