@@ -34,7 +34,7 @@ resource "azurerm_postgresql_flexible_server_configuration" "this" {
 }
 
 resource "azurerm_postgresql_flexible_server_configuration" "log_acivation" {
-  name      = "logfiles.download_enabled"
+  name      = "logfiles.download_enable"
   server_id = azurerm_postgresql_flexible_server.this.id
   value     = "ON"
 }
