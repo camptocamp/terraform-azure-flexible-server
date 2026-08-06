@@ -34,16 +34,12 @@ resource "azurerm_postgresql_flexible_server_configuration" "this" {
 }
 
 resource "azurerm_postgresql_flexible_server_configuration" "log_acivation" {
-  for_each = var.postgresql_config
-
   name      = "logfiles.download_enabled"
   server_id = azurerm_postgresql_flexible_server.this.id
   value     = "ON"
 }
 
 resource "azurerm_postgresql_flexible_server_configuration" "log_retention" {
-  for_each = var.postgresql_config
-
   name      = "logfiles.retention_days"
   server_id = azurerm_postgresql_flexible_server.this.id
   value     = "3"
