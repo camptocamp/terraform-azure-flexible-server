@@ -189,3 +189,15 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "logs_activation" {
+  description = "If ON, logs are enabled"
+  type        = string
+  default     = "ON"
+}
+
+variable "logs_retention" {
+  description = "Number of days to keep logs"
+  type        = number
+  default     = 3
+}
