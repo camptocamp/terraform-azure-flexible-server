@@ -36,13 +36,13 @@ resource "azurerm_postgresql_flexible_server_configuration" "this" {
 resource "azurerm_postgresql_flexible_server_configuration" "log_activation" {
   name      = "logfiles.download_enable"
   server_id = azurerm_postgresql_flexible_server.this.id
-  value     = "ON"
+  value     = var.logs_activation
 }
 
 resource "azurerm_postgresql_flexible_server_configuration" "log_retention" {
   name      = "logfiles.retention_days"
   server_id = azurerm_postgresql_flexible_server.this.id
-  value     = "3"
+  value     = var.logs_retention
 }
 
 resource "azurerm_management_lock" "this" {
