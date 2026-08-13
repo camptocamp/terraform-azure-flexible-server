@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.8.0](https://github.com/camptocamp/terraform-azure-flexible-server/compare/v1.7.0...v1.8.0) (2026-08-13)
+
+
+### Features
+
+* added configuration to enabled logs on azure for postgresql ([848559a](https://github.com/camptocamp/terraform-azure-flexible-server/commit/848559a2c364df264da83a272aa859a2ab19078e))
+* added configuration to enabled logs on azure for postgresql ([adbc86e](https://github.com/camptocamp/terraform-azure-flexible-server/commit/adbc86e5cb3aa230e0b85c207c5638d4f808c48a))
+* added variable to set logs conf ([3178a06](https://github.com/camptocamp/terraform-azure-flexible-server/commit/3178a068abfeb10c22093354189c00892efaf314))
+* apply the configuration only to the server postgresql ([868cb8c](https://github.com/camptocamp/terraform-azure-flexible-server/commit/868cb8ce833fb39e5e0e58b4b07cf6c9961ee8c6))
+
+
+### Bug Fixes
+
+* **ci:** bump deprecated release-please action version ([cb20b16](https://github.com/camptocamp/terraform-azure-flexible-server/commit/cb20b16821c28fab3155226dc47da5c22c8be8e6))
+* **ci:** config files ([f07a7cb](https://github.com/camptocamp/terraform-azure-flexible-server/commit/f07a7cb59bd15de4b2fdf0420cb9feab7de249a2))
+* **ci:** config files ([f8cf7ba](https://github.com/camptocamp/terraform-azure-flexible-server/commit/f8cf7ba5b1cc72d7c826406304482d29df6dce66))
+* **ci:** create config file ([f579b7c](https://github.com/camptocamp/terraform-azure-flexible-server/commit/f579b7c31810d77fd603dd8129c0daa026a4a5a9))
+
 ## [1.7.0](https://github.com/camptocamp/terraform-azure-flexible-server/compare/v1.6.0...v1.7.0) (2026-06-09)
 
 
