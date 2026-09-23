@@ -137,7 +137,7 @@ resource "azurerm_key_vault" "this" {
   sku_name                    = "standard"
   tenant_id                   = var.tenant_id
   soft_delete_retention_days  = 7
-  enable_rbac_authorization   = true
+  rbac_authorization_enabled  = true
   enabled_for_disk_encryption = true
   tags                        = var.tags
 }
