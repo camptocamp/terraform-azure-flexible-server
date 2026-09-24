@@ -69,6 +69,8 @@ resource "azurerm_subnet" "this" {
   address_prefixes     = var.subnet_address_prefixes
   service_endpoints    = ["Microsoft.Storage"]
 
+  private_endpoint_network_policies = "Enabled"
+
   delegation {
     name = "fs"
     service_delegation {
@@ -137,7 +139,7 @@ resource "azurerm_key_vault" "this" {
   sku_name                    = "standard"
   tenant_id                   = var.tenant_id
   soft_delete_retention_days  = 7
-  enable_rbac_authorization   = true
+  rbac_authorization_enabled  = true
   enabled_for_disk_encryption = true
   tags                        = var.tags
 }
