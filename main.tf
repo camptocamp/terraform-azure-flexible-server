@@ -69,6 +69,8 @@ resource "azurerm_subnet" "this" {
   address_prefixes     = var.subnet_address_prefixes
   service_endpoints    = ["Microsoft.Storage"]
 
+  private_endpoint_network_policies = "Enabled"
+
   delegation {
     name = "fs"
     service_delegation {
