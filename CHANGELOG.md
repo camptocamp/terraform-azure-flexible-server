@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.9.0](https://github.com/camptocamp/terraform-azure-flexible-server/compare/v1.8.0...v1.9.0) (2026-10-26)
+
+
+### Features
+
+* updated code to compatible azurerm v4 ([87f1aee](https://github.com/camptocamp/terraform-azure-flexible-server/commit/87f1aeedf96b7b4137fbc4e8a6c4206995f9e82f))
+* updated code to compatible azurerm v4 ([c2b6dde](https://github.com/camptocamp/terraform-azure-flexible-server/commit/c2b6dde9af151cc5c9a97648a4c7819c6f57019f))
+* updated module to compatible azurerm v4 ([ae13c8e](https://github.com/camptocamp/terraform-azure-flexible-server/commit/ae13c8e2936718373908e0323c62be104ed483c0))
+
 ## [1.8.0](https://github.com/camptocamp/terraform-azure-flexible-server/compare/v1.7.0...v1.8.0) (2026-08-13)
 
 
